@@ -11,7 +11,6 @@ interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
 export default function Input({
   errorMessage,
   name,
-  className,
   classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
   classNameInput,
   register,

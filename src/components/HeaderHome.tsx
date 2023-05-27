@@ -7,7 +7,7 @@ export default function HeaderHome() {
     <>
       <header className='w-full text-gray-700 bg-[#F0EAEA] border-b-gray-100 shadow-sm body-font'>
         <div className='container m-auto lg:w-[1200px] flex flex-col items-start justify-between p-6 mx-auto md:flex-row'>
-          <Link to='' className='my-auto ml-9 px-2  font-bold text-gray-900  '>
+          <Link to='/' className='my-auto ml-9 px-2  font-bold text-gray-900  '>
             BITEST
           </Link>
           <fieldset className='w-1/3 m-auto  text-gray-500'>
@@ -26,7 +26,7 @@ export default function HeaderHome() {
                 type='search'
                 name='Search'
                 placeholder='Search...'
-                className='md:w-full border border-gray-300 p-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none dark:bg-gray-800 dark:text-gray-100 focus:dark:bg-gray-900 focus:dark:border-violet-400'
+                className='md:w-full border border-gray-300 p-2 pl-10 text-sm rounded-full sm:w-auto focus:outline-none dark:bg-gray-800 dark:text-gray-100 focus:dark:bg-gray-900 focus:dark:border-violet-400'
               />
             </div>
           </fieldset>
