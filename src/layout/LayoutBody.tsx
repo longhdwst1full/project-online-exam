@@ -7,11 +7,11 @@ interface Props {
   btnTitle?: string
   titleConten: string
 }
-export default function LayoutBody({ btnLink, children, titleConten,btnTitle }: Props) {
+export default function LayoutBody({ btnLink, children, titleConten, btnTitle }: Props) {
   return (
     <div className='containter min-h-screen lg:max-w-[1200px] m-auto'>
       <div className='my-4 text-right'>
-        {btnTitle&& btnLink && (
+        {btnTitle && btnLink && (
           <Link
             className='text-right  mt-2 mr-4 inline-block rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75'
             to={btnLink}

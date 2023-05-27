@@ -3,7 +3,6 @@ import './App.css'
 import './index.css'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import LayoutAmin from './components/LayoutAmin'
 import LayoutHome from './layout/LayoutHome'
 import HomePage from './pages/HomePage'
 import ListExam from './pages/examPage/ListExam'
@@ -11,6 +10,7 @@ import ListQuestion from './pages/questions/ListQuestion'
 import Addquestion from './pages/questions/Addquestion'
 import AddExam from './pages/examPage/AddExam'
 import HistoryExam from './pages/historyExam'
+import DoExam from './pages/examPage/DoExam'
 
 const router = createBrowserRouter([
   {
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
       { path: 'add', element: <AddExam /> },
       { path: 'edit', element: <Addquestion /> }
     ]
+  },
+  {
+    path: 'doexam',
+    element: <DoExam />
   },
   {
     path: '/history',
