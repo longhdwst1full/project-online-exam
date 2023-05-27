@@ -25,7 +25,6 @@ export default function Input({
         className={`p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-lg focus:shadow-sm ${classNameInput}`}
         {...registerResult}
         {...rest}
-        type='text'
       />
       <div className={classNameError}>{errorMessage}</div>
     </div>

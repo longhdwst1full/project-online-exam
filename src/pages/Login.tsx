@@ -4,7 +4,7 @@ import Input from '~/components/Input'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IRegister } from '~/types/Auth/registerr.type'
+import { IRegister } from '~/types/registerr.type'
 
 const schemaLogin = Yup.object({
   email: Yup.string().email('Email không đúng định dạng').required('Email là trường bắt buộc nhập '),

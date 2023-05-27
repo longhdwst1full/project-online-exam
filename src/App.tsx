@@ -4,12 +4,46 @@ import './index.css'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import LayoutAmin from './components/LayoutAmin'
+import LayoutHome from './layout/LayoutHome'
+import HomePage from './pages/HomePage'
+import ListExam from './pages/examPage/ListExam'
+import ListQuestion from './pages/questions/ListQuestion'
+import Addquestion from './pages/questions/Addquestion'
+import AddExam from './pages/examPage/AddExam'
+import HistoryExam from './pages/historyExam'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LayoutAmin></LayoutAmin>
+    element: (
+      <LayoutHome>
+        <HomePage />
+      </LayoutHome>
+    )
   },
+  {
+    path: 'question',
+    element: <LayoutHome />,
+    children: [
+      { path: '', element: <ListQuestion /> },
+      { path: 'add', element: <Addquestion /> },
+      { path: 'edit', element: <Addquestion /> }
+    ]
+  },
+  {
+    path: 'exam',
+    element: <LayoutHome />,
+    children: [
+      { path: '', element: <ListExam /> },
+      { path: 'add', element: <AddExam /> },
+      { path: 'edit', element: <Addquestion /> }
+    ]
+  },
+  {
+    path: '/history',
+    element: <HistoryExam />
+  },
+
   {
     path: '/login',
     element: <Login />

@@ -4,7 +4,7 @@ import Input from '~/components/Input'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IRegister } from '~/types/Auth/registerr.type'
+import { IRegister } from '~/types/registerr.type'
 import { Link } from 'react-router-dom'
 
 const schemaLogin = Yup.object({
