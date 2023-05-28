@@ -41,10 +41,10 @@ export default function Login() {
             onSubmit={handleSubmit(processForm)}
             className='mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8'
           >
-            <p className='text-center text-lg font-medium mb-5 p-2'>Sign in to your account</p>
+            <p className='text-center text-lg font-medium mb-5 p-2'>Đăng nhập</p>
 
-            <div>
-              <label htmlFor='email' className='sr-only'>
+            <div className=''>
+              <label htmlFor='email' className=' px-2'>
                 Email
               </label>
 
@@ -52,22 +52,23 @@ export default function Login() {
                 name='email'
                 register={register}
                 type='email'
-                className='mt-8'
                 errorMessage={errors.email?.message}
                 placeholder='Enter email'
               />
             </div>
             <div>
-              <label htmlFor='password' className='sr-only'>
-                Password
-              </label>
+              <div className='flex justify-between px-2'>
+                <label htmlFor='password' className=''>
+                  Password
+                </label>
+                <span className='font-normal text-sm'>Quên mật khẩu ?</span>
+              </div>
 
               <div className='relative'>
                 <Input
                   type='password'
                   name='password'
                   register={register}
-                  className='mt-8'
                   errorMessage={errors.password?.message}
                   placeholder='Enter password'
                 />

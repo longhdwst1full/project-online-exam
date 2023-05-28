@@ -2,6 +2,6 @@ export interface IRegister {
   email: string
   password: string
   confirmPassword: string
-  iamge?: string
+  image?: string
   displayName: string
 }
