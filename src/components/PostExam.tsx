@@ -6,11 +6,11 @@ export default function PostExam() {
     <div>
       <div>
         <div className='overflow-hidden rounded-lg bg-white shadow transition-transform duration-100 hover:translate-y-[-0.04rem] hover:shadow-md'>
-          <div className='relative w-full pt-[100%]'>
+          <div className='relative z-10 w-full pt-[100%]'>
             <img
               src='https://api-ecom.duthanhduoc.com/images/ef8fcfa8-c006-486e-9660-462efa93ad43.jpg'
               alt=''
-              className='absolute top-0 left-0 h-full w-full bg-white object-cover'
+              className='absolute z-10 top-0 left-0 h-full w-full bg-white object-cover'
             />
           </div>
           <div className='overflow-hidden p-2'>
@@ -20,7 +20,7 @@ export default function PostExam() {
               inventore magnam eos?
             </div>
 
-            <div className='my-3  flex items-center text-sm justify-between'>
+            <div className='my-3  flex items-center text-xs  justify-between'>
               <p>
                 Số Câu hỏi:<span className='mx-2'>28</span>
               </p>

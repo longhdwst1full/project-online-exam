@@ -6,16 +6,39 @@ import Input from '~/components/Input'
 import Selector from '~/components/Selector'
 import LayoutBody from '~/layout/LayoutBody'
 import * as Yup from 'yup'
+import Select from '~/components/Select'
 
 const FLAG = 5
 
+interface IFormQuestion {
+  subject: string
+  status: string
+  level: string
+  grade: string
+  questionType: string
+  questionGroup: string
+  question: string
+  answer: string
+  answer1: string
+  answer2: string
+  answer3?: string
+  answer4?: string
+  answer5?: string
+}
 const schemaForm = Yup.object({
   subject: Yup.string().required(),
   status: Yup.string().required(),
   level: Yup.string().required(),
   grade: Yup.string().required(),
   questionType: Yup.string().required(),
-  questionGroup: Yup.string().required()
+  questionGroup: Yup.string().required(),
+  question: Yup.string().required(),
+  answer: Yup.string().required(),
+  answer1: Yup.string().required(),
+  answer2: Yup.string().required(),
+  answer3: Yup.string(),
+  answer4: Yup.string(),
+  answer5: Yup.string()
 })
 export default function Addquestion() {
   const [isModalAdd, setIdModelAdd] = useState(false)
@@ -24,8 +47,19 @@ export default function Addquestion() {
     { id: 1, component: <Input key={1} placeholder='Đáp án 2' /> }
   ])
 
-  const methods = useForm({
-    defaultValues: {},
+  const methods = useForm<IFormQuestion>({
+    defaultValues: {
+      subject: '',
+      status: '',
+      level: '',
+      grade: '',
+      questionType: '',
+      questionGroup: '',
+      question: '',
+      answer: '',
+      answer1: '',
+      answer2: ''
+    },
     resolver: yupResolver(schemaForm)
   })
   const {
@@ -33,9 +67,7 @@ export default function Addquestion() {
     control,
     formState: { errors },
     handleSubmit,
-    setValue,
-    watch,
-    setError
+    watch
   } = methods
 
   const handleAddQuestion = () => {
@@ -51,7 +83,7 @@ export default function Addquestion() {
             </div>
             <span
               className='absolute top-2 -right-9  h-6   w-6 text-center hover:bg-red-600   bg-gray-500 rounded-full'
-              onClick={() => deleteInputAnswer(nextKey)}
+              // onClick={() => deleteInputAnswer(nextKey)}
             >
               X
             </span>
@@ -66,39 +98,81 @@ export default function Addquestion() {
   const deleteInputAnswer = (id: number) => {
     setInputs(() => inputs.filter((input) => input.id !== id))
   }
-  const handleForm = (data: any) => {
+  const handleForm = (data: IFormQuestion) => {
     console.log(data)
+    console.log('Ađ')
   }
+
+  const ad = watch()
+  // console.log(ad)
   return (
-    <LayoutBody titleConten='Add Question'>
+    <LayoutBody titleConten='Thêm câu hỏi'>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleForm)} className='p-2 mt-10 w-2/3 m-auto'>
           {/* lớp và môn học  */}
           <div className='grid grid-cols-2 gap-12 items-center'>
-            <Selector title='Môn học'>
-              <option defaultValue="">Chọn Môn</option>
-              <option value='1'>Anh</option>
-              <option value='2'>toán</option>
-            </Selector>
-
-            <Selector title='Lớp'>
-              <option defaultValue="">Chọn Lớp</option>
-              <option value='1'>10</option>
-              <option value='2'>11</option>
-            </Selector>
+            {/* subject */}
+            <div className='grid grid-cols-1 items-center'>
+              <div className='grid grid-cols-4 items-center'>
+                <div className='col-span-1 mb-5 py-3'>Môn học</div>
+                <div className='col-span-3 '>
+                  <Select name='subject' errorMessage={errors.subject?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
+                      Chọn Môn
+                    </option>
+                    <option value='1'>Anh</option>
+                    <option value='2'>toán</option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            {/* lớp grade */}
+            <div className='grid grid-cols-1 items-center'>
+              <div className='grid grid-cols-4 items-center'>
+                <div className='col-span-1 mb-5 py-3'>Lớp</div>
+                <div className='col-span-3 '>
+                  <Select name='grade' errorMessage={errors.grade?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
+                      Chọn Lớp
+                    </option>
+                    <option value='1'>10</option>
+                    <option value='2'>11</option>
+                  </Select>
+                </div>
+              </div>
+            </div>
           </div>
           {/* level và mức độ  */}
           <div className='grid grid-cols-2 gap-10 items-center'>
-            <Selector title='Level'>
-              <option defaultValue="">Level</option>
-              <option value='1'>khó</option>
-              <option value='2'>TB</option>
-            </Selector>
-            <Selector title='Mức độ'>
-              <option defaultValue="">Mức độ</option>
-              <option value='1'>Nhận biết</option>
-              <option value='2'>Vận dụng</option>
-            </Selector>
+            <div className='grid grid-cols-1 items-center'>
+              <div className='grid grid-cols-4 items-center'>
+                <div className='col-span-1 mb-5 py-3'>Level</div>
+                <div className='col-span-3 '>
+                  <Select name='level' errorMessage={errors.level?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
+                      Level
+                    </option>
+                    <option value='1'>khó</option>
+                    <option value='2'>TB</option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-1 items-center'>
+              <div className='grid grid-cols-4 items-center'>
+                <div className='col-span-1 mb-5 py-3'>Mức độ</div>
+                <div className='col-span-3 '>
+                  <Select name='questionGroup' errorMessage={errors.questionGroup?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
+                      Mức độ
+                    </option>
+                    <option value='1'>Nhận biết</option>
+                    <option value='2'>Vận dụng</option>
+                  </Select>
+                </div>
+              </div>
+            </div>
           </div>
           {/* status và câu hỏi  */}
           <div className='grid grid-cols-2 gap-10 items-center'>
@@ -111,9 +185,9 @@ export default function Addquestion() {
                       <div className='flex items-center ml-1'>
                         <input
                           id='default-radio-1'
+                          {...register('status')}
                           type='radio'
-                          value=''
-                          name='default-radio'
+                          value='1'
                           className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                         />
                         <label htmlFor='default-radio-1' className=' p-2'>
@@ -125,9 +199,9 @@ export default function Addquestion() {
                       <div className='flex items-center ml-1'>
                         <input
                           id='default-radio-2'
+                          {...register('status')}
                           type='radio'
-                          value=''
-                          name='default-radio'
+                          value='2'
                           className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                         />
                         <label htmlFor='default-radio-2' className=' p-2 '>
@@ -135,7 +209,7 @@ export default function Addquestion() {
                         </label>
                       </div>
                     </div>
-                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'></div>
+                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.status?.message}</div>
                   </div>
                 </div>
               </div>
@@ -150,8 +224,8 @@ export default function Addquestion() {
                         <input
                           id='default-radio-3'
                           type='radio'
-                          value=''
-                          name='default-radio'
+                          {...register('questionType')}
+                          value='1'
                           className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                         />
                         <label htmlFor='default-radio-3' className=' p-2'>
@@ -164,8 +238,8 @@ export default function Addquestion() {
                         <input
                           id='default-radio-4'
                           type='radio'
-                          value=''
-                          name='default-radio'
+                          {...register('questionType')}
+                          value='2'
                           className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                         />
                         <label htmlFor='default-radio-4' className=' p-2 '>
@@ -173,7 +247,9 @@ export default function Addquestion() {
                         </label>
                       </div>
                     </div>
-                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'></div>
+                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>
+                      {errors.questionType?.message}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -182,21 +258,41 @@ export default function Addquestion() {
           {/* question */}
           {isModalAdd ? (
             <div className='mt-3 border border-gray-300 p-10 rounded-md'>
-              <div className=''>
+              <div>
                 <p className=' font-medium'>Câu hỏi của bạn : </p>
-                <Input placeholder='Mời nhập câu hỏi ở đây' className='p-2' />
+
+                <Input
+                  placeholder='Mời nhập câu hỏi ở đây'
+                  name='question'
+                  register={register}
+                  errorMessage={errors.question?.message}
+                  // className='p-2'
+                />
               </div>
               <div className='mt-2'>
                 <p className=' font-medium'>Câu trả lời : </p>
 
                 <div className='w-2/3 ml-10'>
-                  {inputs.map(({ id, component }) => (
-                    <div key={id}>{component}</div>
-                  ))}
+                  <Input
+                    name='answer1'
+                    register={register}
+                    errorMessage={errors.answer1?.message}
+                    placeholder='Đáp án 1'
+                  />
+                  <Input
+                    name='answer2'
+                    placeholder='Đáp án 2 '
+                    register={register}
+                    errorMessage={errors.answer2?.message}
+                  />
                 </div>
+                <p className="mt-3">
+                  Đáp án : <Input register={register} name='answer' placeholder='Nhập đáp án'/>
+                </p>
               </div>
               <div className='grid w-2/3 m-auto grid-cols-2 justify-items-center items-center gap-6 mt-10'>
                 <Button
+                  type='button'
                   className='border border-gray-300 bg-yellow-400 rounded-md  p-2 cursor-pointer font-medium'
                   onClick={handleAddQuestion}
                 >
@@ -214,6 +310,7 @@ export default function Addquestion() {
           ) : (
             <div className='text-center mt-10'>
               <Button
+                type='button'
                 className='border border-gray-300 bg-green-500 rounded-md w-1/3 p-2 cursor-pointer font-medium'
                 onClick={() => setIdModelAdd(!isModalAdd)}
               >

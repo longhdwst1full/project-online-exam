@@ -12,6 +12,12 @@ export default function HeaderHome() {
           <Link to='/' className='my-auto ml-9 px-2  font-bold text-gray-900  '>
             BITEST
           </Link>
+          <Link to='/question' className='my-auto ml-9 px-2 text-gray-900  '>
+            Question
+          </Link>
+          <Link to='/exam' className='my-auto ml-9 px-2 text-gray-900  '>
+            Exam
+          </Link>
           <fieldset className='w-1/3 m-auto  text-gray-500'>
             <label htmlFor='Search' className='hidden'>
               Search

@@ -3,13 +3,9 @@ import React from 'react'
 interface Props {
   title: string
   children: React.ReactNode
-  optionSelect?: {
-    id: string
-    name: string
-  }
 }
 export default function Selector(props: Props) {
-  const { title, children, optionSelect } = props
+  const { title, children } = props
   return (
     <div className='grid grid-cols-1 items-center'>
       <div className='grid grid-cols-4 items-center'>

@@ -8,6 +8,7 @@ interface ISelecte extends React.SelectHTMLAttributes<HTMLSelectElement> {
   showErr?: boolean
   register?: UseFormRegister<any>
   rules?: RegisterOptions
+  children?: React.ReactNode
 }
 export default function Select({
   showErr = true,
@@ -16,6 +17,7 @@ export default function Select({
   classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
   classNameSelect,
   register,
+  children,
   rules,
   ...rest
 }: ISelecte) {
@@ -27,9 +29,15 @@ export default function Select({
         {...registerResult}
         {...rest}
       >
-        <option defaultValue=''>Chọn Môn</option>
-        <option value='1'>Anh</option>
-        <option value='2'>toán</option>
+        {children ? (
+          children
+        ) : (
+          <>
+            <option defaultValue=''>Chọn Môn</option>
+            <option value='1'>Anh</option>
+            <option value='2'>toán</option>
+          </>
+        )}
       </select>
       {showErr && <div className={classNameError}>{errorMessage}</div>}
     </div>
