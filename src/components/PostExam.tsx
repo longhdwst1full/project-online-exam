@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export default function PostExam() {
   return (
     <div>
-      <Link to=''>
+      <div>
         <div className='overflow-hidden rounded-lg bg-white shadow transition-transform duration-100 hover:translate-y-[-0.04rem] hover:shadow-md'>
           <div className='relative w-full pt-[100%]'>
             <img
@@ -28,15 +28,15 @@ export default function PostExam() {
                 Số lượt làm : <span className='mx-2'>888</span>
               </p>
             </div>
-            <div
-              // to=''
+            <Link
+              to='/doexam'
               className='bg-[#EE0000] text-center text-white mt-5 w-full block  my-2 p-1 cursor-pointer rounded-lg hover:shadow hover:bg-orange-500   '
             >
               Lam ngay
-            </div>
+            </Link>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   )
 }

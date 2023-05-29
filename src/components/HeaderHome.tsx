@@ -1,8 +1,10 @@
-import React from 'react'
-import Button from './Button'
 import { Link } from 'react-router-dom'
+import { getInforUserLs } from '~/utils/auth'
+import Popover from './Popover'
 
 export default function HeaderHome() {
+  const user = getInforUserLs()
+
   return (
     <>
       <header className='w-full text-gray-700 bg-[#F0EAEA] border-b-gray-100 shadow-sm body-font'>
@@ -30,20 +32,61 @@ export default function HeaderHome() {
               />
             </div>
           </fieldset>
-          <div className='items-center flex gap-3 h-full'>
-            <Link
-              to='/login'
-              className='px-6 py-2  font-semibold rounded-full bg-red-500 text-white hover:bg-teal-500 hover:text-slate-700'
-            >
-              SignIn
-            </Link>
-            <Link
-              to='/register'
-              className='px-6 py-2 font-semibold rounded-full bg-blue-500 text-gray-50 hover:bg-white hover:border-blue-600 hover:text-slate-800 border'
-            >
-              SignUp
-            </Link>
-          </div>
+          {user ? (
+            <div className='w-10 h-10 rounded-full border border-gray-400 overflow-hidden'>
+              <Popover
+                renderPopover={
+                  <div className='relative z-[9999999999] rounded-sm border border-gray-200 bg-white shadow-md '>
+                    <Link
+                      to=''
+                      className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100  text-black hover:text-cyan-500'
+                    >
+                      Tài khoản của tôi
+                    </Link>
+                    <Link
+                      to='/question'
+                      className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+                    >
+                      Question
+                    </Link>
+                    <Link
+                      to='/exam'
+                      className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+                    >
+                      Exam
+                    </Link>
+                    <button className='border-none block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'>
+                      Đăng xuất
+                    </button>
+                  </div>
+                }
+              >
+                <Link to='' className='d-flex align-items-center gap-10 text-white'>
+                  <img
+                    className='block object-cover h-[36px] w-[36px] rounded-full'
+                    alt='user'
+                    src='https://picsum.photos/200'
+                  />
+                  <p className='mb-0 flex flex-column align-items-center justify-start text-left'>fdfdf</p>
+                </Link>
+              </Popover>
+            </div>
+          ) : (
+            <div className='items-center flex gap-3 h-full'>
+              <Link
+                to='/login'
+                className='px-6 py-2  font-semibold rounded-full bg-red-500 text-white hover:bg-teal-500 hover:text-slate-700'
+              >
+                SignIn
+              </Link>
+              <Link
+                to='/register'
+                className='px-6 py-2 font-semibold rounded-full bg-blue-500 text-gray-50 hover:bg-white hover:border-blue-600 hover:text-slate-800 border'
+              >
+                SignUp
+              </Link>
+            </div>
+          )}
         </div>
       </header>
     </>

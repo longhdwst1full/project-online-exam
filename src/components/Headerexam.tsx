@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Popover from './Popover'
 
 export default function Headerexam() {
   return (
@@ -14,7 +15,42 @@ export default function Headerexam() {
             <span>22:00</span>
           </div>
           <div className='w-10 h-10 rounded-full border border-gray-400 overflow-hidden'>
-            <img src='https://picsum.photos/200' alt='' />
+            <Popover
+              renderPopover={
+                <div className='relative z-10  rounded-sm border border-gray-200 bg-white shadow-md '>
+                  <Link
+                    to='/user/my-profile'
+                    className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100  text-black hover:text-cyan-500'
+                  >
+                    Tài khoản của tôi
+                  </Link>
+                  <Link
+                    to=''
+                    className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+                  >
+                    Question
+                  </Link>
+                  <Link
+                    to=''
+                    className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+                  >
+                    Exam
+                  </Link>
+                  <button className='border-none block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'>
+                    Đăng xuất
+                  </button>
+                </div>
+              }
+            >
+              <Link to='/user/my-profile' className='d-flex align-items-center gap-10 text-white'>
+                <img
+                  className='block object-cover h-[36px] w-[36px] rounded-full'
+                  alt='user'
+                  src='https://picsum.photos/200'
+                />
+                <p className='mb-0 flex flex-column align-items-center justify-start text-left'>fdfdf</p>
+              </Link>
+            </Popover>
           </div>
         </div>
       </header>
