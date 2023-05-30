@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './App.css'
 import './index.css'
 import Login from './pages/Login'
@@ -11,10 +11,25 @@ import Addquestion from './pages/questions/Addquestion'
 import AddExam from './pages/examPage/AddExam'
 import HistoryExam from './pages/historyExam'
 import DoExam from './pages/examPage/DoExam'
+import { getInforUserLs } from './utils/auth'
+import NotFoud from './pages/NotFoud'
+const ProtectRouter = () => {
+  const userLs = Boolean(getInforUserLs())
+  console.log('userLs', userLs)
+  console.log('2222')
 
+  return userLs ? <Outlet /> : <Navigate to='/login' />
+}
+
+function RejectedRoute() {
+  const userLs = Boolean(getInforUserLs())
+  console.log('userLs', userLs)
+  return !userLs ? <Outlet /> : <Navigate to='/' />
+}
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '',
+    index: true,
     element: (
       <LayoutHome>
         <HomePage />
@@ -22,39 +37,55 @@ const router = createBrowserRouter([
     )
   },
   {
-    path: 'question',
-    element: <LayoutHome />,
+    path: '',
+    element: <RejectedRoute />,
     children: [
-      { path: '', element: <ListQuestion /> },
-      { path: 'add', element: <Addquestion /> },
-      { path: 'edit', element: <Addquestion /> }
+      {
+        path: 'login',
+        element: <Login />
+      },
+      {
+        path: 'register',
+        element: <Register />
+      }
     ]
-  },
-  {
-    path: 'exam',
-    element: <LayoutHome />,
-    children: [
-      { path: '', element: <ListExam /> },
-      { path: 'add', element: <AddExam /> },
-      { path: 'edit', element: <Addquestion /> }
-    ]
-  },
-  {
-    path: 'doexam',
-    element: <DoExam />
-  },
-  {
-    path: '/history',
-    element: <HistoryExam />
   },
 
   {
-    path: '/login',
-    element: <Login />
+    path: '',
+    element: <ProtectRouter />,
+    children: [
+      {
+        path: 'question',
+        element: <LayoutHome />,
+        children: [
+          { path: '', element: <ListQuestion /> },
+          { path: 'add', element: <Addquestion /> },
+          { path: 'edit', element: <Addquestion /> }
+        ]
+      },
+      {
+        path: 'exam',
+        element: <LayoutHome />,
+        children: [
+          { path: '', element: <ListExam /> },
+          { path: 'add', element: <AddExam /> },
+          { path: 'edit', element: <Addquestion /> }
+        ]
+      },
+      {
+        path: 'doexam',
+        element: <DoExam />
+      },
+      {
+        path: 'history',
+        element: <HistoryExam />
+      }
+    ]
   },
   {
-    path: '/register',
-    element: <Register />
+    path: '*',
+    element: <NotFoud />
   }
 ])
 function App() {

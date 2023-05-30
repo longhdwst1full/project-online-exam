@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IRegister } from '~/types/registerr.type'
+import { setInforUserLs } from '~/utils/auth'
 
 const schemaLogin = Yup.object({
   email: Yup.string().email('Email không đúng định dạng').required('Email là trường bắt buộc nhập '),
@@ -14,6 +15,7 @@ const schemaLogin = Yup.object({
 type ILogin = Pick<IRegister, 'email' | 'password'>
 
 export default function Login() {
+  const navigate = useNavigate()
   const {
     setError,
     register,
@@ -30,6 +32,8 @@ export default function Login() {
 
   const processForm = (data: ILogin) => {
     console.log(data)
+    setInforUserLs({ name: 'long', email: data.email })
+    navigate('/')
   }
   return (
     <div className=''>
