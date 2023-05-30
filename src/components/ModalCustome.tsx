@@ -16,7 +16,7 @@ const Modal = ({ handleClose, title, body, footer }: ModalProps) => {
           {/*content*/}
           <div className='h-fulllg:h-autoborder-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none '>
             {/*header*/}
-            <div className='bg-green-500 relative flex items-center justify-between p-10 rounded-t '>
+            <div className='bg-green-500 relative flex items-center justify-between p-7 rounded-t '>
               <h3 className='text-xl  font-semibold text-white'>{title}</h3>
               <button
                 className='absolute top-2 right-2 p-1  ml-auto border-0   text-white  hover:opacity-70  transition   '
