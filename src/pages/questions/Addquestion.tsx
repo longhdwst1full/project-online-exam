@@ -1,15 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
 import Selector from '~/components/Selector'
 import LayoutBody from '~/layout/LayoutBody'
 import * as Yup from 'yup'
-import Select from '~/components/Select'
 import InputRadio from '~/components/InputRadio'
-
-const FLAG = 5
 
 interface IFormQuestion {
   subject: string
@@ -42,21 +39,11 @@ const schemaForm = Yup.object({
   answer5: Yup.string()
 })
 
-const InputAnswer = () => {
-  return (
-    <div>
-      <Input />
-    </div>
-  )
-}
-
 export default function Addquestion() {
+  const [arraddInputAnswer, setArraddInputAnswer] = useState<number[] | []>([])
   const [isModalAdd, setIdModelAdd] = useState(false)
-  const [inputs, setInputs] = useState([
-    { id: 0, component: <Input key={0} placeholder='Đáp án 1' /> },
-    { id: 1, component: <Input key={1} placeholder='Đáp án 2' /> }
-  ])
-
+  const [currentInput, setCurrentInput] = useState<number>(3)
+  const [typeInput, setTypeInput] = useState<'radio' | 'checkbox'>('radio')
   const methods = useForm<IFormQuestion>({
     defaultValues: {
       subject: '',
@@ -68,53 +55,38 @@ export default function Addquestion() {
       question: '',
       answer: '',
       answer1: '',
-      answer2: ''
+      answer2: '',
+      answer3: '',
+      answer4: '',
+      answer5: ''
     },
     resolver: yupResolver(schemaForm)
   })
   const {
     register,
-    control,
     formState: { errors },
     handleSubmit,
     watch
   } = methods
 
-  const handleAddQuestion = () => {
-    const nextKey = inputs.length
-
-    if (FLAG > nextKey) {
-      const newInput = {
-        id: nextKey,
-        component: (
-          <div className='relative '>
-            <div className='flex-1 '>
-              <Input placeholder={`Đáp án ${nextKey + 1} `} />
-            </div>
-            <span
-              className='absolute top-2 -right-9  h-6   w-6 text-center hover:bg-red-600   bg-gray-500 rounded-full'
-              onClick={() => deleteInputAnswer(nextKey)}
-            >
-              X
-            </span>
-          </div>
-        )
-      }
-      setInputs([...inputs, newInput])
-    } else {
-      alert('Max trả lời 5')
+  const handleAddQuestion = (id: number) => {
+    if (id < 6) {
+      setArraddInputAnswer((pre) => [...pre, id])
+      setCurrentInput((pre) => pre + 1)
     }
   }
-  const deleteInputAnswer = (id: number) => {
-    setInputs(() => inputs.filter((input) => input.id !== id))
+  const deleteInputAnswer = (id: string) => {
+    setArraddInputAnswer(() => arraddInputAnswer.filter((item) => item !== Number(id)))
   }
   const handleForm = (data: IFormQuestion) => {
     console.log(data)
     console.log('Ađ')
   }
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    e.target.value == '1' ? setTypeInput('radio') : setTypeInput('checkbox')
 
   const ad = watch()
-  // console.log(ad)
+  console.log(ad)
   return (
     <LayoutBody titleConten='Thêm câu hỏi'>
       <FormProvider {...methods}>
@@ -185,8 +157,20 @@ export default function Addquestion() {
                 <div className='col-span-1 mb-5 py-3.5'>Câu hỏi</div>
                 <div className='col-span-3 '>
                   <div className='grid grid-cols-2  mt-2 items-center'>
-                    <InputRadio register={register} name='questionType' value='1' label='1 Đáp án' />
-                    <InputRadio register={register} name='questionType' value='2' label='2 Đáp án' />
+                    <InputRadio
+                      register={register}
+                      name='questionType'
+                      value='1'
+                      label='1 Đáp án'
+                      onChange={handleOnChange}
+                    />
+                    <InputRadio
+                      register={register}
+                      name='questionType'
+                      value='2'
+                      label='2 Đáp án'
+                      onChange={handleOnChange}
+                    />
 
                     <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>
                       {errors.questionType?.message}
@@ -197,7 +181,7 @@ export default function Addquestion() {
             </div>
           </div>
           {/* question */}
-          {isModalAdd ? (
+          {isModalAdd && watch('questionType') ? (
             <div className='mt-3 border border-gray-300 p-10 rounded-md'>
               <div>
                 <p className=' font-medium'>Câu hỏi của bạn : </p>
@@ -212,29 +196,63 @@ export default function Addquestion() {
               <div className='mt-2'>
                 <p className=' font-medium'>Câu trả lời : </p>
 
-                <div className='w-2/3 ml-10'>
-                  <Input
-                    name='answer1'
-                    register={register}
-                    errorMessage={errors.answer1?.message}
-                    placeholder='Đáp án 1'
-                  />
-                  <Input
-                    name='answer2'
-                    placeholder='Đáp án 2 '
-                    register={register}
-                    errorMessage={errors.answer2?.message}
-                  />
-                </div>
-                <div className='mt-3'>
-                  Đáp án : <Input register={register} name='answer' placeholder='Nhập đáp án' />
+                <div className='ml-10'>
+                  <div className='flex gap-3 w-full items-center'>
+                    <input value='1' className='w-4 h-4' type={typeInput} {...register('answer')} />
+                    <div className='flex-1'>
+                      <Input
+                        name='answer1'
+                        register={register}
+                        errorMessage={errors.answer1?.message || errors.answer?.message}
+                        placeholder='Đáp án 1'
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className=' flex gap-3 w-full items-center'>
+                    <input value='2' className='w-4 h-4' type={typeInput} {...register('answer')} />
+                    <div className='flex-1 '>
+                      <Input
+                        name='answer2'
+                        placeholder='Đáp án 2 '
+                        register={register}
+                        errorMessage={errors.answer2?.message || errors.answer?.message}
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  {arraddInputAnswer &&
+                    arraddInputAnswer.length > 0 &&
+                    arraddInputAnswer.map((item, index) => {
+                      return (
+                        <div key={item} className=' flex gap-3 w-full items-center'>
+                          <input value={item} className='w-4 h-4' type={typeInput} {...register('answer')} />
+                          <div className='flex-1 relative'>
+                            <Input
+                              name={`answer${item}`}
+                              placeholder={`Đáp án ${item}`}
+                              register={register}
+                              errorMessage={errors.answer?.message}
+                            />
+                            <div className='absolute top-5 -right-9 h-6 w-6 text-center bg-gray-100 hover:bg-gray-500 rounded-full'>
+                              <i
+                                onClick={() => deleteInputAnswer(item)}
+                                className='fa-solid fa-xmark fa-lg'
+                                style={{ color: '#373434' }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  {/*  */}
                 </div>
               </div>
               <div className='grid w-2/3 m-auto grid-cols-2 justify-items-center items-center gap-6 mt-10'>
                 <Button
                   type='button'
                   className='border border-gray-300 bg-yellow-400 rounded-md  p-2 cursor-pointer font-medium'
-                  onClick={handleAddQuestion}
+                  onClick={() => handleAddQuestion(currentInput)}
                 >
                   Thêm Câu Trả lời
                 </Button>
