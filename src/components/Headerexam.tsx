@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import Popover from './Popover'
 
-export default function Headerexam() {
+interface Props {
+  time: string
+}
+export default function Headerexam({ time }: Props) {
   return (
     <>
       <header className='w-full text-gray-700 bg-[#F0EAEA] border-b-gray-100 shadow-sm body-font'>
@@ -12,7 +15,7 @@ export default function Headerexam() {
 
           <div className='border py-2 px-6 rounded-lg border-gray-400 bg-orange-300 flex justify-center'>
             <p className='font-medium mr-2'>Time: </p>
-            <span>22:00</span>
+            <span>{time}</span>
           </div>
           <div className='w-10 h-10 rounded-full border border-gray-400 overflow-hidden'>
             <Popover

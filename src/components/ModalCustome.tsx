@@ -26,7 +26,7 @@ const Modal = ({ handleClose, title, body, footer }: ModalProps) => {
               </button>
             </div>
             {/*body*/}
-            <div className='relative p-8 flex-auto'> {body}</div>
+            <div className='relative p-8 bg-slate-100 flex-auto'> {body}</div>
             {/*footer*/}
             <div className=''>{footer}</div>
           </div>
