@@ -1,5 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { historyExamUser } from '~/api/exam.api'
 import Button from '~/components/Button'
 import FillterTop from '~/components/FillterTop'
 import Footer from '~/components/Footer'
@@ -7,6 +9,10 @@ import HeaderHome from '~/components/HeaderHome'
 import LayoutBody from '~/layout/LayoutBody'
 
 export default function HistoryExam() {
+  const { data: historyExamQuery } = useQuery({
+    queryKey: ['history'],
+    queryFn: () => historyExamUser()
+  })
   return (
     <>
       <HeaderHome />
@@ -107,9 +113,6 @@ export default function HistoryExam() {
             <thead className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
               <tr>
                 <th scope='col' className='px-6 py-3'>
-                  Ảnh
-                </th>
-                <th scope='col' className='px-6 py-3'>
                   Tiêu Đề
                 </th>
                 <th scope='col' className='px-6 py-3'>
@@ -124,35 +127,26 @@ export default function HistoryExam() {
               </tr>
             </thead>
             <tbody>
-              <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'>
-                <td className='px-4 py-2  w-5/6    m-auto block '>
-                  <div className='relative w-full pt-[100%]'>
-                    <img
-                      className='absolute top-0 left-0 h-full w-full bg-white object-cover'
-                      src='https://picsum.photos/200'
-                      alt=''
-                    />
-                  </div>
-                </td>
-                <th scope='row' className='px-4 py-2'>
-                  Silver
-                </th>
-                <td className='px-4 py-2'>Laptop</td>
-                <td className='px-4 py-2'>$2999</td>
-                <td className='px-4 py-2'>
-                  <div className='flex justify-evenly items-center'>
-                    <Link to='' className='font-medium text-blue-600 dark:text-blue-500 hover:underline'>
-                      <i className='p-2  fa-solid fa-xl fa-eye' style={{ color: '#FFBD1A' }} />
-                    </Link>
-                    <Link to='' className='p-2  font-medium text-blue-600 dark:text-blue-500 hover:underline'>
-                      <i className='fa-regular fa-pen-to-square fa-xl' />
-                    </Link>
-                    <Button className='p-2 font-medium text-blue-600 dark:text-blue-500 hover:underline'>
-                      <i className='fa-solid fa-trash fa-xl' style={{ color: '#ff0000' }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
+              {historyExamQuery?.data &&
+                historyExamQuery.data.map((item) => (
+                  <tr
+                    key={item.id}
+                    className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
+                  >
+                    <th scope='row' className='px-4 py-2'>
+                      {item.questionRight}
+                    </th>
+                    <td className='px-4 py-2'>{item.completeTime}</td>
+                    <td className='px-4 py-2'>{item.questionRight}</td>
+                    <td className='px-4 py-2'>
+                      <div className='flex justify-evenly items-center'>
+                        <Link to='' className='font-medium text-blue-600 dark:text-blue-500 hover:underline'>
+                          <i className='p-2  fa-solid fa-xl fa-eye' style={{ color: '#FFBD1A' }} />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

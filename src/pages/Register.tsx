@@ -1,13 +1,19 @@
-import React from 'react'
+import { useMemo, useState } from 'react'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IRegister } from '~/types/registerr.type'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import InputFile from '~/components/InputFile'
+import { registerAuth } from '~/api/auth.api'
+import { toast } from 'react-toastify'
+import { uploadImage } from '~/api/general.api'
 
 const schemaLogin = Yup.object({
+  image: Yup.string(),
   email: Yup.string().email('Email không đúng định dạng').required('Email là trường bắt buộc nhập '),
   password: Yup.string().min(6).required('Password là trường bắt buộc nhập'),
   confirmPassword: Yup.string()
@@ -18,23 +24,60 @@ const schemaLogin = Yup.object({
 })
 
 export default function Register() {
+  const [file, setFile] = useState<File>()
   const {
     setError,
     register,
+    watch,
     formState: { errors },
-    handleSubmit,
-    reset
+    handleSubmit
   } = useForm<IRegister>({
     defaultValues: {
       email: '',
       displayName: '',
-      password: ''
+      password: '',
+      image: ''
     },
     resolver: yupResolver(schemaLogin)
   })
 
-  const processForm = (data: IRegister) => {
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
+
+  const navigate = useNavigate()
+  const avatar = watch('image')
+  const uploadAvatarMutaion = useMutation(uploadImage)
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: IRegister) => registerAuth(body)
+  })
+
+  const processForm = async (data: IRegister) => {
     console.log(data)
+
+    let avatarName = avatar
+    if (file) {
+      const form = new FormData()
+      form.append('image', file)
+      const uploadRes = await uploadAvatarMutaion.mutateAsync(form)
+      avatarName = uploadRes.data.data
+    }
+    registerAccountMutation.mutate(
+      { ...data, image: avatarName },
+      {
+        onSuccess: () => {
+          navigate('/login')
+          toast.success('Dang ki thanh cong')
+        },
+        onError: (error) => {
+          console.log(error)
+        }
+      }
+    )
+  }
+
+  const handleChangeFile = (file?: File) => {
+    setFile(file)
   }
   return (
     <div className='flex justify-center items-center mx-auto h-[100vh]  max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8'>
@@ -57,9 +100,15 @@ export default function Register() {
               />
             </div>
             <div>
-              <p className='px-2'>Ảnh</p>
+              {previewImage ? (
+                <img src={previewImage} alt='' />
+              ) : (
+                <>
+                  <p className='px-2 mb-2'>Ảnh</p>
 
-              <Input name='image' register={register} classNameInput='py-2.5' type='file' />
+                  <InputFile onChange={handleChangeFile} />
+                </>
+              )}
             </div>
           </div>
           <div className='!mt-2.5'>

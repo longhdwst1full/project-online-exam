@@ -6,14 +6,17 @@ export interface IRegister {
   displayName: string
 }
 
+export interface IUserRespon {
+  id: number
+  email: string
+  image?: string
+  displayName: string
+  createdAt: string
+  updatedAt: string
+  token: string
+  refreshToken: string
+}
 export interface AuthResponse {
-  accessToken: string
-  data: {
-    id: string
-    email: string
-    image?: string
-    displayName: string
-    createdAt: string
-    updatedAt: string
-  }
+  message: string
+  user: IUserRespon
 }

@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import LayoutBody from '~/layout/LayoutBody'
 import * as Yup from 'yup'
 import Selector from '~/components/Selector'
@@ -8,8 +9,15 @@ import Button from '~/components/Button'
 import Input from '~/components/Input'
 import Select from '~/components/Select'
 import InputRadio from '~/components/InputRadio'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { addExam } from '~/api/exam.api'
+import { IExam } from '~/types/exam.type'
+import { useNavigate } from 'react-router-dom'
+import { uploadImage } from '~/api/general.api'
+import InputFile from '~/components/InputFile'
+import { getAllQuestions } from '~/api/question.api'
 
-interface IExam {
+interface IExamForm {
   subject: string
   grade: string
   title: string
@@ -18,7 +26,7 @@ interface IExam {
   time: string
   level: string
   image?: string
-  listquestion: [string]
+  listquestion: number[]
 }
 
 const validateForm = Yup.object({
@@ -30,11 +38,11 @@ const validateForm = Yup.object({
   time: Yup.string().required(),
   level: Yup.string().required(),
   image: Yup.string(),
-  listquestion: Yup.string().required()
+  listquestion: Yup.number().required()
 })
 
 export default function AddExam() {
-  const methods = useForm<IExam>({
+  const methods = useForm<IExamForm>({
     defaultValues: {
       subject: '',
       grade: '',
@@ -48,9 +56,22 @@ export default function AddExam() {
     },
     resolver: yupResolver(validateForm)
   })
+  const addExamMutation = useMutation({
+    mutationKey: ['addExam'],
+    mutationFn: (data: Omit<IExam, 'id'>) => addExam(data)
+  })
+  const [file, setFile] = useState<File>()
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
+  const uploadAvatarMutaion = useMutation(uploadImage)
+  const navigate = useNavigate()
+  const { data: allQuestionQuery } = useQuery({
+    queryKey: ['allquery'],
+    queryFn: () => getAllQuestions()
+  })
   const {
     register,
-    control,
     formState: { errors },
     handleSubmit,
     setValue,
@@ -58,12 +79,48 @@ export default function AddExam() {
     setError
   } = methods
   const inputFile = useRef(null)
-  const handleForm = (data: IExam) => {
-    console.log(data)
-  }
   const ad = watch()
   console.log(ad)
+  const avatar = watch('image')
 
+  const handleForm = async (data: IExamForm) => {
+    console.log(data)
+
+    let avatarName = avatar
+    if (file) {
+      const form = new FormData()
+      form.append('image', file)
+      const uploadRes = await uploadAvatarMutaion.mutateAsync(form)
+      avatarName = uploadRes.data.data
+    }
+
+    addExamMutation.mutate(
+      {
+        name: data.title,
+        code: data.code,
+        image: avatarName,
+        subjectId: Number(data.subject),
+        gradeId: Number(data.grade),
+        levelId: Number(data.level),
+        statusId: Number(data.status),
+        time: Number(data.time),
+        idQuestions: [5, 6, 9, 11]
+      },
+      {
+        onSuccess: () => {
+          // navigate('/login')
+          toast.success('Them thanh cong')
+        },
+        onError: (error) => {
+          console.log(error)
+        }
+      }
+    )
+  }
+
+  const handleChangeFile = (file?: File) => {
+    setFile(file)
+  }
   return (
     <LayoutBody titleConten='Thêm bài thi'>
       <FormProvider {...methods}>
@@ -150,10 +207,19 @@ export default function AddExam() {
             </div>
             <div className='flex justify-between gap-4'>
               <div className='flex-1 grid grid-cols-3 '>
-                <div className='col-span-1 mb-5 mr-2 py-3.5'>Ảnh</div>
+                {/* <div className='col-span-1 mb-5 mr-2 py-3.5'>Ảnh</div>
                 <div className='col-span-2'>
                   <Input register={register} name='images' type='file' />
-                </div>
+                </div> */}
+                {previewImage ? (
+                  <img src={previewImage} alt='' />
+                ) : (
+                  <>
+                    <p className='px-2 mb-2'>Ảnh</p>
+
+                    <InputFile onChange={handleChangeFile} />
+                  </>
+                )}
               </div>
               <div className='flex-1'></div>
             </div>
@@ -172,36 +238,24 @@ export default function AddExam() {
             <div className='p-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.listquestion?.message}</div>
             {/* choose add question */}
             <div className='border border-gray-400 rounded'>
-              <div className='flex items-center pl-4 '>
-                <input
-                  id='bordered-checkbox-1'
-                  type='checkbox'
-                  value='1'
-                  {...register('listquestion')}
-                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                />
-                <label
-                  htmlFor='bordered-checkbox-1'
-                  className='w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-                >
-                  11 23232
-                </label>
-              </div>
-              <div className='flex items-center pl-4'>
-                <input
-                  id='bordered-checkbox-1'
-                  type='checkbox'
-                  value='2'
-                  {...register('listquestion')}
-                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                />
-                <label
-                  htmlFor='bordered-checkbox-1'
-                  className='w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-                >
-                  11 23232
-                </label>
-              </div>
+              {allQuestionQuery?.data &&
+                allQuestionQuery?.data.map((item) => (
+                  <div key={item.id} className='flex items-center pl-4 '>
+                    <input
+                      id='bordered-checkbox-1'
+                      type='checkbox'
+                      value={item.id}
+                      {...register('listquestion')}
+                      className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                    />
+                    <label
+                      htmlFor='bordered-checkbox-1'
+                      className='w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
+                    >
+                      {item.content}
+                    </label>
+                  </div>
+                ))}
             </div>
           </div>
         </form>

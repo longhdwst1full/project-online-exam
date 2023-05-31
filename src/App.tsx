@@ -74,7 +74,7 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: 'doexam',
+        path: 'doexam/:id',
         element: <DoExam />
       },
       {

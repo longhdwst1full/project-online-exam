@@ -6,6 +6,8 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IRegister } from '~/types/registerr.type'
 import { setInforUserLs } from '~/utils/auth'
+import { useMutation } from '@tanstack/react-query'
+import { loginAuth } from '~/api/auth.api'
 
 const schemaLogin = Yup.object({
   email: Yup.string().email('Email không đúng định dạng').required('Email là trường bắt buộc nhập '),
@@ -30,10 +32,22 @@ export default function Login() {
     resolver: yupResolver(schemaLogin)
   })
 
+  const loginMutation = useMutation({
+    mutationFn: (data: ILogin) => loginAuth(data)
+  })
+
   const processForm = (data: ILogin) => {
     console.log(data)
-    setInforUserLs({ name: 'long', email: data.email })
-    navigate('/')
+    loginMutation.mutate(data, {
+      onSuccess(data, variables, context) {
+        console.log('data login respon', data)
+        setInforUserLs(data.data.user)
+        navigate('/')
+      },
+      onError(error, variables, context) {
+        console.log(error)
+      }
+    })
   }
   return (
     <div className=''>

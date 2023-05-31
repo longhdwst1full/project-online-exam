@@ -1,10 +1,26 @@
-export interface IQuestions {
+interface IQuestionType {
+  id: number
   content: string
-  subjectId: string
-  gradedId: string
-  levelId: string
-  statusId: string
-  questionGrounpId: string
-  questionTypeId: string
-  answerQuestions: []
+  subjectId: number
+  gradeId: number
+  levelId: number
+  questionGroupId: number
+  statusId: number
+  questionTypeId: number
+}
+
+export interface IQuestions extends IQuestionType {
+  createAnswerQuestionDtos: {
+    content: string
+    isRight: boolean
+  }[]
+}
+export interface IQuestionsResponse extends IQuestionType {
+  createdAt: string
+  updatedAt: string
+  answers: {
+    id: number
+    content: string
+    isRight: boolean
+  }[]
 }
