@@ -1,4 +1,4 @@
-import { IQuestions, IQuestionsResponse } from '~/types/question.type'
+import { IQuestionResponsHasPage, IQuestions, IQuestionsResponse } from '~/types/question.type'
 import http from './http'
 
 // add question
@@ -8,12 +8,12 @@ export const addQuestion = (data: Omit<IQuestions, 'id'>) => {
 
 // get all question
 export const getAllQuestions = () => {
-  return http.get<IQuestionsResponse[]>('questions')
+  return http.get<IQuestionResponsHasPage>('questions')
 }
 
 // get all questions user create
 export const getMyQuestions = () => {
-  return http.get<IQuestionsResponse[]>('questionuser')
+  return http.get<IQuestionResponsHasPage>('questionuser')
 }
 
 // update question

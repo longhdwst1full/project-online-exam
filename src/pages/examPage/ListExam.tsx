@@ -64,7 +64,7 @@ export default function ListExam() {
           </thead>
           <tbody>
             {getListExamQuery?.data &&
-              getListExamQuery?.data.map((item) => {
+              getListExamQuery?.data.data.map((item) => {
                 const status = item.statusId === 1 ? 'Public' : item.statusId === 2 ? 'Private' : 'Draft'
                 return (
                   <tr

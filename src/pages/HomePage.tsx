@@ -21,7 +21,7 @@ export default function HomePage() {
           {/* list exam */}
           <div className=' sm:grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 px-4 py-6 min-h-full lg:min-h-screen space-y-6 sm:space-y-0 sm:gap-4'>
             {getListDoExam?.data &&
-              getListDoExam?.data.map((item: IExamResponse) => <PostExam key={item.id} exam={item} />)}
+              getListDoExam?.data.data.map((item: IExamResponse) => <PostExam key={item.id} exam={item} />)}
           </div>
         </section>
         <div className='my-4 text-center'>

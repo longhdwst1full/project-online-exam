@@ -13,7 +13,15 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { addExam } from '~/api/exam.api'
 import { IExam } from '~/types/exam.type'
 import { useNavigate } from 'react-router-dom'
-import { uploadImage } from '~/api/general.api'
+import {
+  getGrades,
+  getLevels,
+  getQuestionGroup,
+  getQuestiontypes,
+  getStatus,
+  getSubjects,
+  uploadImage
+} from '~/api/general.api'
 import InputFile from '~/components/InputFile'
 import { getAllQuestions } from '~/api/question.api'
 
@@ -70,6 +78,25 @@ export default function AddExam() {
     queryKey: ['allquery'],
     queryFn: () => getAllQuestions()
   })
+  // get list genaral
+  const { data: gradesQuery } = useQuery({
+    queryKey: ['grades'],
+    queryFn: () => getGrades()
+  })
+  const { data: subjectQuery } = useQuery({
+    queryKey: ['subject'],
+    queryFn: () => getSubjects()
+  })
+  const { data: statusQuery } = useQuery({
+    queryKey: ['status'],
+    queryFn: () => getStatus()
+  })
+  const { data: levelQuery } = useQuery({
+    queryKey: ['level'],
+    queryFn: () => getLevels()
+  })
+  console.log('status', statusQuery)
+
   const {
     register,
     formState: { errors },
@@ -127,13 +154,16 @@ export default function AddExam() {
         <form onSubmit={handleSubmit(handleForm)} className='grid grid-cols-2 p-2 mt-10'>
           <div className='grid w-5/6 m-auto col-span-1 border-r-[1px] border-gray-400 pr-6'>
             {/* lớp và môn học  */}
-
-            <Selector title='Môn học' register={register} name='subject' errorMessage={errors.subject?.message}>
-              <option value='' disabled>
+            <Selector title='Môn học' name='subject' errorMessage={errors.subject?.message} register={register}>
+              <option className='font-sm' value='' disabled>
                 Chọn Môn
               </option>
-              <option value='1'>Anh</option>
-              <option value='2'>toán</option>
+              {subjectQuery?.data &&
+                subjectQuery.data.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
             </Selector>
 
             <div className='grid grid-cols-4'>
@@ -174,14 +204,19 @@ export default function AddExam() {
                   />
                 </div>
               </div>
+              {/* grandes */}
               <div className='grid flex-1 grid-cols-2'>
                 <div className='col-span-2 mt-2'>
-                  <Selector title='Lớp' register={register} name='grade' errorMessage={errors.grade?.message}>
-                    <option value='' disabled>
+                  <Selector title='Lớp' name='grade' errorMessage={errors.grade?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
                       Chọn Lớp
                     </option>
-                    <option value='1'>10</option>
-                    <option value='2'>11</option>
+                    {gradesQuery?.data &&
+                      gradesQuery.data.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
                   </Selector>
                 </div>
               </div>
@@ -195,12 +230,17 @@ export default function AddExam() {
               </div>
               <div className='grid flex-1 grid-cols-2'>
                 <div className='col-span-2 mt-2'>
-                  <Selector title='Level' register={register} name='level' errorMessage={errors.level?.message}>
-                    <option value='' disabled>
+                  {/* level */}
+                  <Selector title='Level' name='level' errorMessage={errors.level?.message} register={register}>
+                    <option className='font-sm' value='' disabled>
                       Level
                     </option>
-                    <option value='1'>khó</option>
-                    <option value='2'>TB</option>
+                    {levelQuery?.data &&
+                      levelQuery.data.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
                   </Selector>
                 </div>
               </div>
@@ -239,7 +279,7 @@ export default function AddExam() {
             {/* choose add question */}
             <div className='border border-gray-400 rounded'>
               {allQuestionQuery?.data &&
-                allQuestionQuery?.data.map((item) => (
+                allQuestionQuery?.data.data.map((item) => (
                   <div key={item.id} className='flex items-center pl-4 '>
                     <input
                       id='bordered-checkbox-1'

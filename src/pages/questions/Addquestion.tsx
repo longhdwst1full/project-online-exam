@@ -48,6 +48,7 @@ export default function Addquestion() {
     mutationKey: ['addquestion'],
     mutationFn: (data: Omit<IQuestions, 'id'>) => addQuestion(data)
   })
+  // get list genarel
   const { data: gradesQuery } = useQuery({
     queryKey: ['grades'],
     queryFn: () => getGrades()
@@ -149,7 +150,7 @@ export default function Addquestion() {
     <LayoutBody titleConten='Thêm câu hỏi'>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleForm)} className='p-2 mt-10 w-2/3 m-auto'>
-          {/* lớp và môn học  */}
+          
           <div className='grid grid-cols-2 gap-12 items-center'>
             {/* subject */}
 

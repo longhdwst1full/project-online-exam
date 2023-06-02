@@ -32,7 +32,7 @@ export default function ListQuestion() {
 
   useEffect(() => {
     if (questionQuery?.data) {
-      setListQuestions(questionQuery.data)
+      setListQuestions(questionQuery.data.data)
     }
   }, [questionQuery?.data])
 

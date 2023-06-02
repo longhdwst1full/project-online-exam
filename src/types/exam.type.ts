@@ -28,6 +28,11 @@ export interface IExamResponse extends Omit<IExam, 'idQuestions'> {
   questions: IQuestionsResponse[]
 }
 
+export interface IExamResponsHasPage {
+  totalPage: number
+  data: IExamResponse[]
+}
+
 export interface IHistoryExamResponse {
   id: number
   appUserId: number

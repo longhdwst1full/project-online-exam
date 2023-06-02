@@ -1,5 +1,5 @@
 import http from './http'
-import { IExam, IExamResponse, IHistoryExamResponse } from '~/types/exam.type'
+import { IExam, IExamResponsHasPage, IExamResponse, IHistoryExamResponse } from '~/types/exam.type'
 
 // add Exam
 export const addExam = (data: Omit<IExam, 'id'>) => {
@@ -8,12 +8,12 @@ export const addExam = (data: Omit<IExam, 'id'>) => {
 
 // get all Exam
 export const getAllExam = () => {
-  return http.get<IExamResponse[]>('exams')
+  return http.get<IExamResponsHasPage>('exams/getall')
 }
 
 // get all Exam user create
 export const getMyExam = () => {
-  return http.get<IExamResponse[]>('examusers')
+  return http.get<IExamResponsHasPage>('examusers')
 }
 // get one  Exam user create
 export const getOneExam = (id: number) => {

@@ -24,3 +24,8 @@ export interface IQuestionsResponse extends IQuestionType {
     isRight: boolean
   }[]
 }
+
+export interface IQuestionResponsHasPage {
+  totalPage: number
+  data: IQuestionsResponse[]
+}
