@@ -10,7 +10,7 @@ export const setInforUserLs = (data: IUser) => {
   localStorage.setItem('inforCustomer', JSON.stringify(data))
 }
 export const clearInforCustomer = () => {
-  localStorage.getItem('inforCustomer')
+  localStorage.removeItem('inforCustomer')
   const clearLSEvent = new Event('clearLS')
-  LocalStorageEventTarget.dispatchEvent(clearLSEvent)
+  return window.dispatchEvent(clearLSEvent)
 }

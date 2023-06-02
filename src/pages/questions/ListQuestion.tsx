@@ -32,8 +32,7 @@ export default function ListQuestion() {
 
   useEffect(() => {
     if (questionQuery?.data) {
-      const questionsArray = Array.isArray(questionQuery.data) ? questionQuery.data : [questionQuery.data]
-      setListQuestions((prev) => [...prev, ...questionsArray])
+      setListQuestions(questionQuery.data)
     }
   }, [questionQuery?.data])
 
@@ -84,7 +83,7 @@ export default function ListQuestion() {
               listQuestions.map((item) => {
                 return (
                   <tr
-                    key={item.id}
+                    key={item.id + 'l1'}
                     className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
                   >
                     <th scope='row' className='px-4 py-2'>
@@ -92,13 +91,13 @@ export default function ListQuestion() {
                     </th>
                     <td className='px-4 py-2 grid gap-4 grid-cols-2 justify-items-center'>
                       {item.answers &&
-                        item.answers.map((answer, index) => (
-                          <div key={answer.id} className='col-span-1'>
+                        item.answers.map((answer) => (
+                          <div key={answer.id + 'Er'} className='col-span-1'>
                             <p>{answer.content}</p>
                           </div>
                         ))}
                     </td>
-                    {/* <td className='px-4 py-2'>$2999</td> */}
+
                     <td className='text-center w-fit px-4 py-2'>
                       <div className='w-full flex justify-center gap-4 items-center'>
                         <Button

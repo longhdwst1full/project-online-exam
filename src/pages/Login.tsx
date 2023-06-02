@@ -4,10 +4,11 @@ import Input from '~/components/Input'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IRegister } from '~/types/registerr.type'
+import { IAuthResponseErr, IRegister } from '~/types/registerr.type'
 import { setInforUserLs } from '~/utils/auth'
 import { useMutation } from '@tanstack/react-query'
 import { loginAuth } from '~/api/auth.api'
+import { toast } from 'react-toastify'
 
 const schemaLogin = Yup.object({
   email: Yup.string().email('Email không đúng định dạng').required('Email là trường bắt buộc nhập '),
@@ -22,8 +23,7 @@ export default function Login() {
     setError,
     register,
     formState: { errors },
-    handleSubmit,
-    reset
+    handleSubmit
   } = useForm<ILogin>({
     defaultValues: {
       email: '',
@@ -35,7 +35,7 @@ export default function Login() {
   const loginMutation = useMutation({
     mutationFn: (data: ILogin) => loginAuth(data)
   })
-
+  console.log(loginMutation)
   const processForm = (data: ILogin) => {
     console.log(data)
     loginMutation.mutate(data, {
@@ -43,9 +43,31 @@ export default function Login() {
         console.log('data login respon', data)
         setInforUserLs(data.data.user)
         navigate('/')
+        toast.success('Đăng nhập thành công')
       },
-      onError(error, variables, context) {
-        console.log(error)
+      onError: (error: any) => {
+        console.log('error respon ', error)
+        const formError: IAuthResponseErr = error.response?.data
+        if (
+          formError.statusCode === 401 &&
+          formError.type == 'Unauthorized' &&
+          formError.message == 'Email does not exist'
+        ) {
+          setError('email', {
+            message: formError.detail,
+            type: 'Server'
+          })
+        }
+        if (
+          formError.statusCode === 401 &&
+          formError.type == 'Unauthorized' &&
+          formError.message == 'Incorrect password'
+        ) {
+          setError('password', {
+            message: formError.detail,
+            type: 'Server'
+          })
+        }
       }
     })
   }
@@ -77,7 +99,7 @@ export default function Login() {
             <div>
               <div className='flex justify-between px-2'>
                 <label htmlFor='password' className=''>
-                  Password
+                  Mật khẩu
                 </label>
                 <span className='font-normal text-sm'>Quên mật khẩu ?</span>
               </div>
@@ -120,13 +142,13 @@ export default function Login() {
               type='submit'
               className='block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white'
             >
-              Sign in
+              Đăng nhập
             </Button>
 
             <p className='text-center text-sm text-gray-500'>
-              No account?
-              <Link className='underline' to='/register'>
-                Sign up
+              Có phải bạn chưa có tài khoản?
+              <Link className='underline ml-2' to='/register'>
+                Đăng kí
               </Link>
             </p>
           </form>

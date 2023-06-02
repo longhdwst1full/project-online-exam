@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IRegister } from '~/types/registerr.type'
+import { IAuthResponseErr, IRegister } from '~/types/registerr.type'
 import { Link, useNavigate } from 'react-router-dom'
 import InputFile from '~/components/InputFile'
 import { registerAuth } from '~/api/auth.api'
@@ -69,8 +69,29 @@ export default function Register() {
           navigate('/login')
           toast.success('Dang ki thanh cong')
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log(error)
+          const formError: IAuthResponseErr = error.response?.data
+          if (
+            formError.statusCode === 422 &&
+            formError.type == 'UnprocessableEntity' &&
+            formError.message == 'Email already exists'
+          ) {
+            setError('email', {
+              message: formError.detail,
+              type: 'Server'
+            })
+          }
+          if (
+            formError.statusCode === 422 &&
+            formError.type == 'UnprocessableEntity' &&
+            formError.message == 'Invalid password'
+          ) {
+            setError('password', {
+              message: formError.detail,
+              type: 'Server'
+            })
+          }
         }
       }
     )
@@ -118,7 +139,7 @@ export default function Register() {
           </div>
 
           <div className='!mt-2.5'>
-            <p className='px-2 '>Password</p>
+            <p className='px-2 '>Mật khẩu </p>
 
             <div className='relative'>
               <Input
@@ -155,7 +176,7 @@ export default function Register() {
           </div>
           {/* confirmpassword */}
           <div className='!mt-2.5'>
-            <p className='px-2'>ConfirmPassword</p>
+            <p className='px-2'>Nhập lại mật khẩu </p>
 
             <div className='relative'>
               <Input
@@ -200,7 +221,7 @@ export default function Register() {
 
           <p className='text-center text-sm text-gray-500'>
             Bạn đã có tài khoản?
-            <Link className='underline' to='/login'>
+            <Link className='underline ml-2' to='/login'>
               Đăng nhập
             </Link>
           </p>

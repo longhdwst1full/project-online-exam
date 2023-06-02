@@ -7,7 +7,11 @@ import Selector from '~/components/Selector'
 import LayoutBody from '~/layout/LayoutBody'
 import * as Yup from 'yup'
 import InputRadio from '~/components/InputRadio'
-
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { IQuestions } from '~/types/question.type'
+import { addQuestion } from '~/api/question.api'
+import { toast } from 'react-toastify'
+import { getGrades, getLevels, getQuestionGroup, getQuestiontypes, getStatus, getSubjects } from '~/api/general.api'
 interface IFormQuestion {
   subject: string
   status: string
@@ -40,6 +44,35 @@ const schemaForm = Yup.object({
 })
 
 export default function Addquestion() {
+  const addQuestionMuatation = useMutation({
+    mutationKey: ['addquestion'],
+    mutationFn: (data: Omit<IQuestions, 'id'>) => addQuestion(data)
+  })
+  const { data: gradesQuery } = useQuery({
+    queryKey: ['grades'],
+    queryFn: () => getGrades()
+  })
+  const { data: subjectQuery } = useQuery({
+    queryKey: ['subject'],
+    queryFn: () => getSubjects()
+  })
+  const { data: statusQuery } = useQuery({
+    queryKey: ['subject'],
+    queryFn: () => getStatus()
+  })
+  const { data: levelQuery } = useQuery({
+    queryKey: ['level'],
+    queryFn: () => getLevels()
+  })
+  const { data: questiontypesQuery } = useQuery({
+    queryKey: ['level'],
+    queryFn: () => getQuestiontypes()
+  })
+  const { data: questionGroupQuery } = useQuery({
+    queryKey: ['level'],
+    queryFn: () => getQuestionGroup()
+  })
+
   const [arraddInputAnswer, setArraddInputAnswer] = useState<number[] | []>([])
   const [isModalAdd, setIdModelAdd] = useState(false)
   const [currentInput, setCurrentInput] = useState<number>(3)
@@ -80,7 +113,32 @@ export default function Addquestion() {
   }
   const handleForm = (data: IFormQuestion) => {
     console.log(data)
-    console.log('Ađ')
+    addQuestionMuatation.mutate(
+      {
+        content: data.question,
+        subjectId: Number(data.subject),
+        gradeId: Number(data.grade),
+        levelId: Number(data.level),
+        questionGroupId: Number(data.questionGroup),
+        statusId: Number(data.status),
+        questionTypeId: Number(data.questionType),
+        createAnswerQuestionDtos: [
+          {
+            content: data.answer1,
+            isRight: true
+          }
+        ]
+      },
+      {
+        onSuccess: () => {
+          // navigate('/login')
+          toast.success('Them thanh cong')
+        },
+        onError: (error) => {
+          console.log(error)
+        }
+      }
+    )
   }
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     e.target.value == '1' ? setTypeInput('radio') : setTypeInput('checkbox')
@@ -99,15 +157,23 @@ export default function Addquestion() {
               <option className='font-sm' value='' disabled>
                 Chọn Môn
               </option>
-              <option value='1'>Anh</option>
-              <option value='2'>toán</option>
+              {subjectQuery?.data &&
+                subjectQuery.data.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
             </Selector>
             <Selector title='Lớp' name='grade' errorMessage={errors.grade?.message} register={register}>
               <option className='font-sm' value='' disabled>
                 Chọn Lớp
               </option>
-              <option value='1'>10</option>
-              <option value='2'>11</option>
+              {gradesQuery?.data &&
+                gradesQuery.data.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
             </Selector>
 
             {/* lớp grade */}
@@ -118,8 +184,12 @@ export default function Addquestion() {
               <option className='font-sm' value='' disabled>
                 Level
               </option>
-              <option value='1'>khó</option>
-              <option value='2'>TB</option>
+              {levelQuery?.data &&
+                levelQuery.data.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
             </Selector>
 
             <Selector
@@ -131,8 +201,12 @@ export default function Addquestion() {
               <option className='font-sm' value='' disabled>
                 Mức độ
               </option>
-              <option value='1'>Nhận biết</option>
-              <option value='2'>Vận dụng</option>
+              {questionGroupQuery?.data &&
+                questionGroupQuery.data.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
             </Selector>
           </div>
           {/* status và câu hỏi  */}

@@ -11,19 +11,24 @@ import Addquestion from './pages/questions/Addquestion'
 import AddExam from './pages/examPage/AddExam'
 import HistoryExam from './pages/historyExam'
 import DoExam from './pages/examPage/DoExam'
-import { getInforUserLs } from './utils/auth'
+import { clearInforCustomer, getInforUserLs } from './utils/auth'
 import NotFoud from './pages/NotFoud'
+import { IUserRespon } from './types/registerr.type'
+import { useEffect } from 'react'
+
 const ProtectRouter = () => {
-  const userLs = Boolean(getInforUserLs())
-  console.log('userLs', userLs)
-  console.log('2222')
+  const useToken: IUserRespon | null = getInforUserLs()
+
+  const userLs = Boolean(useToken && useToken.token)
 
   return userLs ? <Outlet /> : <Navigate to='/login' />
 }
 
 function RejectedRoute() {
-  const userLs = Boolean(getInforUserLs())
-  console.log('userLs', userLs)
+  const useToken: IUserRespon | null = getInforUserLs()
+
+  const userLs = Boolean(useToken && useToken.token)
+
   return !userLs ? <Outlet /> : <Navigate to='/' />
 }
 const router = createBrowserRouter([
@@ -89,6 +94,15 @@ const router = createBrowserRouter([
   }
 ])
 function App() {
+  useEffect(() => {
+    const handleClearLS = () => {
+      clearInforCustomer()
+    }
+
+    window.addEventListener('clearLS', handleClearLS)
+    return () => window.removeEventListener('clearLS', handleClearLS)
+  }, [])
+
   return <RouterProvider router={router} />
 }
 

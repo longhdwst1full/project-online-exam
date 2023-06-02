@@ -1,10 +1,17 @@
-import { Link } from 'react-router-dom'
-import { getInforUserLs } from '~/utils/auth'
+import { Link, useNavigate } from 'react-router-dom'
+import { getInforUserLs, clearInforCustomer } from '~/utils/auth'
 import Popover from './Popover'
 
+import { toast } from 'react-toastify'
 export default function HeaderHome() {
   const user = getInforUserLs()
+  const navigate = useNavigate()
 
+  const handleClick = () => {
+    clearInforCustomer()
+    toast.success('Đăng xuất thành công')
+    navigate('/')
+  }
   return (
     <>
       <header className='w-full text-gray-700 bg-[#F0EAEA] border-b-gray-100 shadow-sm body-font'>
@@ -49,19 +56,11 @@ export default function HeaderHome() {
                     >
                       Tài khoản của tôi
                     </Link>
-                    <Link
-                      to='/question'
-                      className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+
+                    <button
+                      className='border-none block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+                      onClick={handleClick}
                     >
-                      Question
-                    </Link>
-                    <Link
-                      to='/exam'
-                      className='block w-full text-black bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
-                    >
-                      Exam
-                    </Link>
-                    <button className='border-none block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'>
                       Đăng xuất
                     </button>
                   </div>

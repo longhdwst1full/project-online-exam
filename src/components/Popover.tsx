@@ -30,7 +30,7 @@ export default function Popover({ children, renderPopover }: Props) {
         {children}
       </div>
       {isOpen && (
-        <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
+        <div className='z-[9999999]' ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
           {renderPopover}
         </div>
       )}

@@ -25,7 +25,7 @@ export default function PostExam({ exam }: Props) {
 
           <div className='my-3  flex items-center text-xs  justify-between'>
             <p>
-              Số Câu hỏi:<span className='mx-2'>{exam.questions.length}</span>
+              Số Câu hỏi:<span className='mx-2'>{exam.questions?.length}</span>
             </p>
             <p>
               Số lượt làm : <span className='mx-2'>888</span>

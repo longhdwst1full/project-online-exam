@@ -20,3 +20,10 @@ export interface AuthResponse {
   message: string
   user: IUserRespon
 }
+
+export interface IAuthResponseErr {
+  detail: string
+  message: string
+  statusCode: number
+  type: string
+}
