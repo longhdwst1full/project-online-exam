@@ -14,7 +14,7 @@ export default function ListExam() {
     queryKey: ['listExam'],
     queryFn: () => getAllExam()
   })
-  console.log('data', getListExamQuery?.data)
+  // console.log('data 1', getListExamQuery?.data)
   const [listExam, setListExam] = useState<IHistoryExamResponse[] | []>([])
   const deleteExamMutation = useMutation({
     mutationKey: ['deleteExam'],

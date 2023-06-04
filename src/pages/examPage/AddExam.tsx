@@ -78,6 +78,7 @@ export default function AddExam() {
     queryKey: ['allquery'],
     queryFn: () => getAllQuestions()
   })
+
   // get list genaral
   const { data: gradesQuery } = useQuery({
     queryKey: ['grades'],
@@ -95,7 +96,6 @@ export default function AddExam() {
     queryKey: ['level'],
     queryFn: () => getLevels()
   })
-  console.log('status', statusQuery)
 
   const {
     register,
@@ -107,12 +107,10 @@ export default function AddExam() {
   } = methods
   const inputFile = useRef(null)
   const ad = watch()
-  console.log(ad)
+
   const avatar = watch('image')
 
   const handleForm = async (data: IExamForm) => {
-    console.log(data)
-
     let avatarName = avatar
     if (file) {
       const form = new FormData()
@@ -120,6 +118,8 @@ export default function AddExam() {
       const uploadRes = await uploadAvatarMutaion.mutateAsync(form)
       avatarName = uploadRes.data.data
     }
+
+    const numArr = ad.listquestion.map((str) => Number(str))
 
     addExamMutation.mutate(
       {
@@ -131,11 +131,11 @@ export default function AddExam() {
         levelId: Number(data.level),
         statusId: Number(data.status),
         time: Number(data.time),
-        idQuestions: [5, 6, 9, 11]
+        idQuestions: numArr
       },
       {
         onSuccess: () => {
-          // navigate('/login')
+          // navigate('/exam')
           toast.success('Them thanh cong')
         },
         onError: (error) => {
@@ -148,6 +148,7 @@ export default function AddExam() {
   const handleChangeFile = (file?: File) => {
     setFile(file)
   }
+
   return (
     <LayoutBody titleConten='Thêm bài thi'>
       <FormProvider {...methods}>
@@ -181,9 +182,11 @@ export default function AddExam() {
             <div className='grid grid-cols-4 items-center'>
               <div className='col-span-1 mb-5 py-3.5'>Status</div>
               <div className='col-span-3 '>
-                <div className='grid grid-cols-2  mt-2 items-center'>
-                  <InputRadio register={register} name='status' value='1' label='Public' />
-                  <InputRadio register={register} name='status' value='2' label='Private' />
+                <div className='grid grid-cols-3  mt-2 items-center'>
+                  {statusQuery &&
+                    statusQuery.data.map((item) => (
+                      <InputRadio key={item.id} register={register} name='status' value={item.id} label={item.name} />
+                    ))}
                   <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.status?.message}</div>
                 </div>
               </div>

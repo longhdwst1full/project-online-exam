@@ -2,7 +2,7 @@ import React from 'react'
 import type { UseFormRegister, RegisterOptions } from 'react-hook-form'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  value: string
+  value: number
   name: string
   label: string
   register?: UseFormRegister<any>

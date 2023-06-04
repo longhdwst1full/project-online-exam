@@ -58,7 +58,7 @@ export default function Addquestion() {
     queryFn: () => getSubjects()
   })
   const { data: statusQuery } = useQuery({
-    queryKey: ['subject'],
+    queryKey: ['status'],
     queryFn: () => getStatus()
   })
   const { data: levelQuery } = useQuery({
@@ -66,11 +66,11 @@ export default function Addquestion() {
     queryFn: () => getLevels()
   })
   const { data: questiontypesQuery } = useQuery({
-    queryKey: ['level'],
+    queryKey: ['questiontypesQuery'],
     queryFn: () => getQuestiontypes()
   })
   const { data: questionGroupQuery } = useQuery({
-    queryKey: ['level'],
+    queryKey: ['questionGroupQuery'],
     queryFn: () => getQuestionGroup()
   })
 
@@ -150,7 +150,6 @@ export default function Addquestion() {
     <LayoutBody titleConten='Thêm câu hỏi'>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleForm)} className='p-2 mt-10 w-2/3 m-auto'>
-          
           <div className='grid grid-cols-2 gap-12 items-center'>
             {/* subject */}
 
@@ -211,50 +210,36 @@ export default function Addquestion() {
             </Selector>
           </div>
           {/* status và câu hỏi  */}
-          <div className='grid grid-cols-2 gap-10 items-center'>
-            <div className='grid grid-cols-1 items-center'>
-              <div className='grid grid-cols-4 items-center'>
-                <div className='col-span-1 mb-5 py-3.5'>Status</div>
-
-                <div className='col-span-3 '>
-                  <div className='grid grid-cols-2  mt-2 items-center'>
-                    {/*  */}
-                    <InputRadio register={register} name='status' value='1' label='Public' />
-                    <InputRadio register={register} name='status' value='2' label='Private' />
-
-                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.status?.message}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='grid grid-cols-1'>
-              <div className='grid grid-cols-4 items-center'>
-                <div className='col-span-1 mb-5 py-3.5'>Câu hỏi</div>
-                <div className='col-span-3 '>
-                  <div className='grid grid-cols-2  mt-2 items-center'>
-                    <InputRadio
-                      register={register}
-                      name='questionType'
-                      value='1'
-                      label='1 Đáp án'
-                      onChange={handleOnChange}
-                    />
-                    <InputRadio
-                      register={register}
-                      name='questionType'
-                      value='2'
-                      label='2 Đáp án'
-                      onChange={handleOnChange}
-                    />
-
-                    <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>
-                      {errors.questionType?.message}
-                    </div>
-                  </div>
-                </div>
+          <div className='grid grid-cols-4 items-center'>
+            <div className='col-span-1 mb-5 py-3.5'>Status</div>
+            <div className='col-span-3 '>
+              <div className='grid grid-cols-3  mt-2 items-center'>
+                {statusQuery &&
+                  statusQuery.data.map((item) => (
+                    <InputRadio key={item.id} register={register} name='status' value={item.id} label={item.name} />
+                  ))}
+                <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.status?.message}</div>
               </div>
             </div>
           </div>
+          <div className='grid grid-cols-4 items-center'>
+            <div className='col-span-1 mb-5 py-3.5'>Câu hỏi</div>
+
+            {questiontypesQuery &&
+              questiontypesQuery.data.map((item) => (
+                <InputRadio
+                  key={item.id}
+                  register={register}
+                  name='questionType'
+                  value={item.id}
+                  label={item.name}
+                  onChange={handleOnChange}
+                />
+              ))}
+
+            <div className='col-span-2 mt-1 text-red-600 min-h-[1.25rem] text-sm'>{errors.questionType?.message}</div>
+          </div>
+
           {/* question */}
           {isModalAdd && watch('questionType') ? (
             <div className='mt-3 border border-gray-300 p-10 rounded-md'>
@@ -295,10 +280,32 @@ export default function Addquestion() {
                       />
                     </div>
                   </div>
+                  <div className=' flex gap-3 w-full items-center'>
+                    <input value='3' className='w-4 h-4' type={typeInput} {...register('answer')} />
+                    <div className='flex-1 '>
+                      <Input
+                        name='answer3'
+                        placeholder='Đáp án 3 '
+                        register={register}
+                        errorMessage={errors.answer2?.message || errors.answer?.message}
+                      />
+                    </div>
+                  </div>
+                  <div className=' flex gap-3 w-full items-center'>
+                    <input value='4' className='w-4 h-4' type={typeInput} {...register('answer')} />
+                    <div className='flex-1 '>
+                      <Input
+                        name='answer4'
+                        placeholder='Đáp án 4 '
+                        register={register}
+                        errorMessage={errors.answer2?.message || errors.answer?.message}
+                      />
+                    </div>
+                  </div>
                   {/*  */}
-                  {arraddInputAnswer &&
+                  {/* {arraddInputAnswer &&
                     arraddInputAnswer.length > 0 &&
-                    arraddInputAnswer.map((item, index) => {
+                    arraddInputAnswer.map((item) => {
                       return (
                         <div key={item} className=' flex gap-3 w-full items-center'>
                           <input value={item} className='w-4 h-4' type={typeInput} {...register('answer')} />
@@ -319,18 +326,18 @@ export default function Addquestion() {
                           </div>
                         </div>
                       )
-                    })}
+                    })} */}
                   {/*  */}
                 </div>
               </div>
               <div className='grid w-2/3 m-auto grid-cols-2 justify-items-center items-center gap-6 mt-10'>
-                <Button
+                {/* <Button
                   type='button'
                   className='border border-gray-300 bg-yellow-400 rounded-md  p-2 cursor-pointer font-medium'
                   onClick={() => handleAddQuestion(currentInput)}
                 >
                   Thêm Câu Trả lời
-                </Button>
+                </Button> */}
 
                 <Button
                   type='submit'
